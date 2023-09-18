@@ -1,0 +1,54 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.poetry]
+authors = ["Matthieu Gallet <github@19pouces.net>"]
+classifiers = [
+  'Development Status :: 5 - Production/Stable',
+  'Operating System :: MacOS :: MacOS X',
+  'Operating System :: POSIX :: BSD',
+  'Operating System :: POSIX :: Linux',
+  'Operating System :: Unix',
+  'License :: OSI Approved :: CeCILL-B Free Software License Agreement (CECILL-B)',
+  'Programming Language :: Python :: 3',
+  'Programming Language :: Python :: 3 :: Only',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11'
+]
+description = "Create and configure a logger using a global configuration file."
+documentation = 'https://github.com/d9pouces/SystemLogger'
+license = "CeCILL-B"
+maintainers = ["Matthieu Gallet <github@19pouces.net>"]
+name = "SystemLogger"
+packages = [{include = "systemlogger"}]
+readme = "README.md"
+repository = 'https://github.com/d9pouces/SystemLogger'
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-logging-loki = "^0.3.1"
+sentry-sdk = "^1.18.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["test_systemlogger"]
+
+[tool.tox]
+legacy_tox_ini = """
+
+[tox]
+envlist = py39, py310, py311
+
+[testenv]
+setenv =
+    PYTHONPATH = {toxinidir}
+commands =
+    python3 -m pip install -U pip pytest
+    pytest --basetemp={envtmpdir}
+"""
