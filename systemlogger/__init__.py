@@ -235,19 +235,17 @@ class LoggerConfigurator:
 
 
 def getLogger(
-    name="default",
-    application: str = "python",
+    name="python",
     config_filename: str = "/etc/python_logging.ini",
     config_section="logging",
 ) -> logging.Logger:
     """Create and configure a new logger.
 
-    :param application: a string, added in Loki and Sentry as the "application" tag
-    :param name: name of the new logger.
+    :param name: name of the new logger, added in Loki and Sentry as the "application" tag.
     :param config_filename: name of the configuration file. Can also be a RawConfigParser.
     :param config_section: section to look at in the configuration file.
     """
     configurator = LoggerConfigurator(
         config=config_filename, config_section=config_section
     )
-    return configurator.get_logger(name=name, application=application)
+    return configurator.get_logger(name=name, application=name)

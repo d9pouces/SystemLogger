@@ -2,7 +2,7 @@ SystemLogger
 ============
 
 
-.. image:: https://pyup.io/repos/github/d9pouces/SystemLogger/shield.svg
+..image:: https://pyup.io/repos/github/d9pouces/SystemLogger/shield.svg
 :target: https://pyup.io/repos/github/d9pouces/SystemLogger/
 :alt: Updates
 
@@ -37,7 +37,7 @@ level = info
 source = python
 # added as "log_source" tag in sentry and loki
 EOF
-python3 -c 'from systemlogger import getLogger ; logger = getLogger(application="demo") ; logger.warning("log warning test") ; logger.error("log error test")'
+python3 -c 'from systemlogger import getLogger ; logger = getLogger(name="demo") ; logger.warning("log warning test") ; logger.error("log error test")'
 ```
 
 In Grafana/Loki and in Sentry, you can now select all Python scripts with the `log_source` tag and a specific script
