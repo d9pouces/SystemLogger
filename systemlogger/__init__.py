@@ -123,12 +123,12 @@ class LoggerConfigurator:
             return False
 
         class LokiHandler(logging_loki.LokiQueueHandler):
-            def handleError(self, record: logging.LogRecord) -> None:
+            def emit(self, record: logging.LogRecord) -> None:
                 # noinspection PyBroadException
                 try:
-                    super().handleError(record)
+                    super().emit(record)
                 except Exception:
-                    print(record.message)
+                    print(f"[Loki unavailable] {record.message}")
 
         loki_url = self.config_parser.get(
             self.config_section, "loki_url", fallback=None
