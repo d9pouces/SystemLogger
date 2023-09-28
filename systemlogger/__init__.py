@@ -121,6 +121,15 @@ class LoggerConfigurator:
         """Configure Loki if available and if the URL is set."""
         if logging_loki is None:
             return False
+
+        class LokiHandler(logging_loki.LokiQueueHandler):
+            def handleError(self, record: logging.LogRecord) -> None:
+                # noinspection PyBroadException
+                try:
+                    super().handleError(record)
+                except Exception:
+                    print(record.message)
+
         loki_url = self.config_parser.get(
             self.config_section, "loki_url", fallback=None
         )
@@ -140,7 +149,7 @@ class LoggerConfigurator:
         url += parsed_url.path
         if parsed_url.query:
             url += f"?{parsed_url.query}"
-        handler = logging_loki.LokiQueueHandler(
+        handler = LokiHandler(
             Queue(-1),
             url=url,
             tags={
