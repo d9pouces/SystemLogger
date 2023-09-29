@@ -40,3 +40,24 @@ def test_console_logger():
     assert len(logger.handlers) == 2  # nosec B101
     assert stdout.getvalue() == "test info\ntest warning\n"  # nosec B101
     assert stderr.getvalue() == "test error\n"  # nosec B101
+
+
+def test_loki_logger():
+    parser = configparser.RawConfigParser()
+    parser.add_section("logging")
+    parser.set(
+        "logging",
+        "loki_url",
+        "http://username:password@localhost:9100/loki/api/v1/push",
+    )
+    parser.set("logging", "level", "warning")
+    stdout = io.StringIO()
+    with unittest.mock.patch("sys.stdout", new=stdout):
+        logger = systemlogger.getLogger(config_filename=parser, name="test_loki")
+        logger.debug("test test")
+        logger.info("test info")
+        logger.warning("test warning")
+        logger.error("test error")
+    assert logger.handlers[0].queue.empty() is False  # nosec B101
+    assert logger.level == logging.WARNING  # nosec B101
+    assert len(logger.handlers) == 1  # nosec B101

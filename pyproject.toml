@@ -25,7 +25,7 @@ name = "SystemLogger"
 packages = [{include = "systemlogger"}]
 readme = "README.md"
 repository = 'https://github.com/d9pouces/SystemLogger'
-version = "0.1.4"
+version = "0.1.5"
 
 [tool.poetry.dependencies]
 python = "^3.9"
