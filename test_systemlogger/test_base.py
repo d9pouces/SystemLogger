@@ -58,6 +58,9 @@ def test_loki_logger():
         logger.info("test info")
         logger.warning("test warning")
         logger.error("test error")
-    assert logger.handlers[0].queue.empty() is False  # nosec B101
     assert logger.level == logging.WARNING  # nosec B101
     assert len(logger.handlers) == 1  # nosec B101
+    assert (
+        stdout.getvalue()
+        == "[Loki unavailable] test warning\n[Loki unavailable] test error\n"
+    )  # nosec B101

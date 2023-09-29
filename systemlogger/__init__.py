@@ -137,15 +137,14 @@ class LoggerConfigurator:
                 self.listener.start()
 
         class LokiHandler(logging_loki.LokiHandler):
-            def emit(self, record: logging.LogRecord) -> None:
-                # noinspection PyBroadException
-                super().emit(record)
-
             def handleError(self, record):
                 print(f"[Loki unavailable] {record.message}")
 
         loki_url = self.config_parser.get(
             self.config_section, "loki_url", fallback=None
+        )
+        threaded = self.config_parser.getboolean(
+            self.config_section, "loki_threaded", fallback=False
         )
         log_source = self.config_parser.get(
             self.config_section, "log_source", fallback="python"
@@ -163,17 +162,20 @@ class LoggerConfigurator:
         url += parsed_url.path
         if parsed_url.query:
             url += f"?{parsed_url.query}"
-        handler = LokiQueueHandler(
-            Queue(-1),
-            url=url,
-            tags={
+        kwargs = {
+            "url": url,
+            "tags": {
                 "application": application,
                 "log_source": log_source,
                 "hostname": self.hostname,
             },
-            auth=(parsed_url.username or "", parsed_url.password or ""),
-            version="1",
-        )
+            "auth": (parsed_url.username or "", parsed_url.password or ""),
+            "version": "1",
+        }
+        if threaded:
+            handler = LokiQueueHandler(Queue(-1), **kwargs)
+        else:
+            handler = LokiHandler(**kwargs)
         logger.addHandler(handler)
         return True
 
