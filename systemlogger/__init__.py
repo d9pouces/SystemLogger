@@ -138,8 +138,14 @@ class LoggerConfigurator:
 
         class LokiHandler(logging_loki.LokiHandler):
             @staticmethod
-            def handleError(record):
-                print(f"[Loki unavailable] {record.message}")
+            def handleError(record: logging.LogRecord):
+                if hasattr(record, "message"):
+                    msg = record.message
+                elif hasattr(record, "msg"):
+                    msg = record.msg
+                else:
+                    msg = str(record)
+                print(f"[Loki unavailable] {msg}")
 
         loki_url = self.config_parser.get(
             self.config_section, "loki_url", fallback=None
