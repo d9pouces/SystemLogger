@@ -137,6 +137,7 @@ class LoggerConfigurator:
                 self.listener.start()
 
         class LokiHandler(logging_loki.LokiHandler):
+            # noinspection PyMethodOverriding
             @staticmethod
             def handleError(record: logging.LogRecord):
                 if hasattr(record, "message"):
