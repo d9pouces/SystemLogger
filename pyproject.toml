@@ -15,7 +15,8 @@ classifiers = [
   'Programming Language :: Python :: 3 :: Only',
   'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
-  'Programming Language :: Python :: 3.11'
+  'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12'
 ]
 description = "Create and configure a logger using a global configuration file."
 documentation = 'https://github.com/d9pouces/SystemLogger'
@@ -29,7 +30,6 @@ version = "0.1.9"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-python-logging-loki = "^0.3.1"
 sentry-sdk = "^1.18.0"
 
 [tool.poetry.group.dev.dependencies]

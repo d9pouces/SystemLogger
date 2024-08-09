@@ -22,7 +22,7 @@ cat << EOF | sudo tee /etc/python_logging.ini
 [logging]
 sentry_dsn = https://username@sentry.example.com/1
 loki_url = https://username:password@localhost:3100/loki/api/v1/push
-syslog_url = tcp://127.0.0.1:10514
+syslog_url = tcp://127.0.0.1:514
 # only udp:// and tcp:// protocols can be used for syslog
 logfile_directory = /tmp
 # the filename will be /tmp/{application}.log

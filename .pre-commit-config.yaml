@@ -2,11 +2,11 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 - repo: https://github.com/d9pouces/mybestpractices
-  rev: 0.3.1
+  rev: 0.3.8
   hooks:
   - id: mybestpractices-git-autotag
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.6.0
   hooks:
   - id: check-added-large-files
   - id: check-ast
@@ -17,7 +17,7 @@ repos:
   - id: check-toml
   - id: check-yaml
 - repo: https://github.com/psf/black
-  rev: 23.9.1
+  rev: 24.8.0
   hooks:
   - id: black
 - repo: https://github.com/pre-commit/pygrep-hooks
@@ -35,11 +35,11 @@ repos:
   hooks:
   - id: doc8
 - repo: https://github.com/asottile/blacken-docs
-  rev: 1.16.0
+  rev: 1.18.0
   hooks:
   - id: blacken-docs
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.6.0
   hooks:
   - id: check-byte-order-marker
   - id: check-docstring-first
@@ -54,22 +54,18 @@ repos:
   rev: v1.10.0
   hooks:
   - id: python-use-type-annotations
-- repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.9.0.5
-  hooks:
-  - id: shellcheck
 - repo: https://github.com/PyCQA/bandit
-  rev: 1.7.5
+  rev: 1.7.9
   hooks:
   - id: bandit
     args: [-x, SystemLogger_tests]
 - repo: https://github.com/PyCQA/flake8
-  rev: 6.1.0
+  rev: 7.1.1
   hooks:
   - id: flake8
     args: [--max-line-length, '88', --ignore, 'E203,E501,C901,F401,W503', --max-complexity, '18', --select, 'B,C,E,F,W,T4,B9']
 - repo: https://github.com/PyCQA/isort
-  rev: 5.12.0
+  rev: 5.13.2
   hooks:
   - id: isort
     args: [--trailing-comma, --line-length, '88', --multi-line, '3', --profile, black, --use-parentheses]
@@ -79,16 +75,12 @@ repos:
   - id: pydocstyle
     args: [--ignore, 'D100,D101,D102,D103,D104,D105,D106,D107,D203,D205,D209,D212,D213,D400,D403,D415']
 - repo: https://github.com/d9pouces/mybestpractices
-  rev: 0.3.1
+  rev: 0.3.8
   hooks:
   - id: mybestpractices-structure
   - id: mybestpractices-third-party-update
-- repo: https://github.com/detailyang/pre-commit-shell
-  rev: 1.0.5
-  hooks:
-  - id: shell-lint
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.6.0
   hooks:
   - id: pretty-format-json
     args: [--autofix]
@@ -97,15 +89,11 @@ repos:
   hooks:
   - id: text-unicode-replacement-char
 - repo: https://github.com/commitizen-tools/commitizen
-  rev: 3.9.0
+  rev: v3.28.0
   hooks:
   - id: commitizen
-- repo: https://github.com/AleksaC/hadolint-py
-  rev: v2.12.0.2
-  hooks:
-  - id: hadolint
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.10.0
+  rev: v2.14.0
   hooks:
   - id: pretty-format-ini
     args: [--autofix]
