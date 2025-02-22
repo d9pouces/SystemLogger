@@ -36,6 +36,10 @@ level = info
 # minimal level of transmitted log records
 source = python
 # added as "log_source" tag in sentry and loki
+hostname = $(hostname)
+# added as "hostname" tag in sentry and loki
+requests_ca_bundle = /etc/ssl/certs/ca-certificates.crt
+# path to the CA bundle for requests
 EOF
 python3 -c 'from systemlogger import getLogger ; logger = getLogger(name="demo") ; logger.warning("log warning test") ; logger.error("log error test")'
 ```

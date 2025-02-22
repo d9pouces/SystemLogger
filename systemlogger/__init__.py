@@ -17,14 +17,16 @@ from logging.handlers import (
     SysLogHandler,
 )
 from multiprocessing import Queue
-from typing import Union
+from typing import Union, Dict
 
 try:
     import sentry_sdk
 except ImportError:
     sentry_sdk = None
 try:
+    # noinspection PyPackageRequirements
     import logging_loki
+    # noinspection PyPackageRequirements
     import logging_loki.emitter as loki_emitter
 except ImportError:
     logging_loki = None
@@ -64,10 +66,12 @@ class LoggerConfigurator:
     def __init__(
         self,
         config: Union[str, configparser.RawConfigParser] = "/etc/python_logging.ini",
-        config_section="logging",
+        config_section: str = "logging",
+        extra_tags: Dict[str, str] = None,
     ):
         """Initialize the configurator."""
         self.config_parser = self.get_config_parser(config)
+        self.extra_tags = extra_tags or {}
         try:
             self.hostname = socket.gethostname()
         except socket.gaierror:
@@ -102,6 +106,11 @@ class LoggerConfigurator:
         level = self.levels.get(level.lower(), logging.WARNING)
         logger.setLevel(level)
         logger.propagate = False
+        requests_ca_bundle = self.config_parser.get(
+            self.config_section, "requests_ca_bundle", fallback=None
+        )
+        if requests_ca_bundle:
+            os.environ["REQUESTS_CA_BUNDLE"] = requests_ca_bundle
         return True
 
     def configure_syslog(self, logger: logging.Logger) -> bool:
@@ -157,6 +166,9 @@ class LoggerConfigurator:
         log_source = self.config_parser.get(
             self.config_section, "log_source", fallback="python"
         )
+        hostname = self.config_parser.get(
+            self.config_section, "hostname", fallback=self.hostname
+        )
         if not loki_url:
             return False
         loki_emitter.LokiEmitter.level_tag = "level"
@@ -170,13 +182,15 @@ class LoggerConfigurator:
         url += parsed_url.path
         if parsed_url.query:
             url += f"?{parsed_url.query}"
+        tags = {
+            "application": application,
+            "log_source": log_source,
+            "hostname": hostname,
+        }
+        tags.update(self.extra_tags)
         kwargs = {
             "url": url,
-            "tags": {
-                "application": application,
-                "log_source": log_source,
-                "hostname": self.hostname,
-            },
+            "tags": tags,
             "auth": (parsed_url.username or "", parsed_url.password or ""),
             "version": "1",
         }
@@ -264,6 +278,8 @@ class LoggerConfigurator:
         sentry_sdk.init(sentry_dsn)
         sentry_sdk.set_tag("log_source", log_source)
         sentry_sdk.set_tag("application", application)
+        for k, v in self.extra_tags.items():
+            sentry_sdk.set_tag(k, v)
         return True
 
 
@@ -271,14 +287,17 @@ def getLogger(
     name="python",
     config_filename: str = "/etc/python_logging.ini",
     config_section="logging",
+    extra_tags: Dict[str, str] = None,
 ) -> logging.Logger:
     """Create and configure a new logger.
 
     :param name: name of the new logger, added in Loki and Sentry as the "application" tag.
     :param config_filename: name of the configuration file. Can also be a RawConfigParser.
     :param config_section: section to look at in the configuration file.
+    :param extra_tags: additional tags to add to the Loki and Sentry logs.
+    :return: the new logger.
     """
     configurator = LoggerConfigurator(
-        config=config_filename, config_section=config_section
+        config=config_filename, config_section=config_section, extra_tags=extra_tags
     )
     return configurator.get_logger(name=name, application=name)
